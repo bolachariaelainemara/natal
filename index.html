@@ -134,6 +134,12 @@
       transform: translateY(-2px);
     }
     
+    .item-image-container {
+      flex-shrink: 0;
+      margin-right: 20px;
+      position: relative;
+    }
+    
     .item-image {
       border-radius: 10px;
       width: 150px;
@@ -141,7 +147,24 @@
       object-fit: cover;
       border: 3px solid #2d8c3d;
       box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-      margin-right: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .item-image:hover {
+      transform: scale(1.05);
+    }
+    
+    .gallery-indicator {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: rgba(199, 30, 58, 0.9);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: bold;
     }
     
     .no-image {
@@ -156,7 +179,7 @@
       color: #999;
       font-size: 12px;
       text-align: center;
-      margin-right: 20px;
+      cursor: pointer;
     }
     
     .item-details {
@@ -212,6 +235,149 @@
       line-height: 1.4;
     }
     
+    /* Modal para galeria de fotos */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-content-container {
+      position: relative;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 95%;
+      height: 85vh;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: zoomIn 0.3s ease;
+    }
+    
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      width: auto;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
+      object-fit: contain;
+    }
+    
+    .modal-caption {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 800px;
+      text-align: center;
+      color: #ccc;
+      padding: 15px 0;
+      font-size: 18px;
+      background: rgba(0,0,0,0.8);
+      border-radius: 0 0 10px 10px;
+      position: relative;
+      top: -10px;
+    }
+    
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2001;
+      transition: 0.3s;
+      background: rgba(0,0,0,0.5);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .close:hover {
+      color: #c41e3a;
+      background: rgba(255,255,255,0.9);
+      transform: scale(1.1);
+    }
+    
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 15px 20px;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      z-index: 2002;
+    }
+    
+    .modal-nav:hover {
+      background: rgba(199, 30, 58, 0.9);
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    .modal-prev {
+      left: 20px;
+    }
+    
+    .modal-next {
+      right: 20px;
+    }
+    
+    /* Miniaturas na galeria */
+    .gallery-thumbnails {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 0 20px;
+      flex-wrap: wrap;
+    }
+    
+    .thumbnail {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0.1);
+      padding: 2px;
+    }
+    
+    .thumbnail:hover, .thumbnail.active {
+      opacity: 1;
+      border-color: #c41e3a;
+      transform: scale(1.1);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes zoomIn {
+      from { transform: translateY(-50%) scale(0.7); opacity: 0; }
+      to { transform: translateY(-50%) scale(1); opacity: 1; }
+    }
+    
     footer {
       background: linear-gradient(135deg, #2d8c3d 0%, #1a5f23 100%);
       color: white;
@@ -236,16 +402,71 @@
         text-align: center;
       }
       
-      .item-image, .no-image {
+      .item-image-container {
         margin-right: 0;
         margin-bottom: 15px;
+      }
+      
+      .item-image, .no-image {
         width: 200px;
         height: 200px;
+      }
+      
+      .modal-content-container {
+        width: 98%;
+        height: 80vh;
+      }
+      
+      .modal-content {
+        max-width: 95%;
+        max-height: 95%;
+      }
+      
+      .modal-nav {
+        padding: 10px 15px;
+        font-size: 18px;
+      }
+      
+      .modal-prev {
+        left: 10px;
+      }
+      
+      .modal-next {
+        right: 10px;
+      }
+      
+      .close {
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+        width: 40px;
+        height: 40px;
+      }
+      
+      .gallery-thumbnails {
+        flex-wrap: wrap;
+      }
+      
+      .thumbnail {
+        width: 50px;
+        height: 50px;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Modal para galeria de fotos -->
+  <div id="galleryModal" class="modal">
+    <span class="close">&times;</span>
+    <button class="modal-nav modal-prev">❮</button>
+    <button class="modal-nav modal-next">❯</button>
+    <div class="modal-content-container">
+      <img class="modal-content" id="expandedImg">
+    </div>
+    <div id="imageCaption" class="modal-caption"></div>
+    <div class="gallery-thumbnails" id="galleryThumbnails"></div>
+  </div>
+  
   <div class="container">
     <header>
       <div class="header-bg">
@@ -257,7 +478,7 @@
         <h1>🎄 Feliz Natal! Pedidos especiais para as festas</h1>
         <div class="horario-info">
           <div class="qr-code">
-            <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/pix_qrcode.png" alt="QR Code para pedidos" onerror="this.style.display='none'">
+            <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/web_qrcode.png" alt="QR Code para pedidos" onerror="this.style.display='none'">
           </div>
           <div class="horario-text">
             🎁 COLEÇÃO DE NATAL
@@ -272,12 +493,19 @@
           <h2 class="category-title">BOLACHA NATAL</h2>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/00_Então_é_Natal/00_01.jpg" 
                        class="item-image" 
                        alt="Então é Natal "
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Então é Natal ', [
+                         '00_Então_é_Natal/00_01.jpg',
+                         '00_Então_é_Natal/00_02.jpg',
+                         '00_Então_é_Natal/00_03.jpg',
+                         ''
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Então é Natal \', [\'00_Então_é_Natal/00_01.jpg\',\'00_Então_é_Natal/00_02.jpg\',\'00_Então_é_Natal/00_03.jpg\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+2</div>
                 
               </div>
               <div class="item-details">
@@ -294,12 +522,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/01_Kit_Árvore_de_Natal/01_01.jpg" 
                        class="item-image" 
                        alt="Árvore de Natal"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Árvore de Natal', [
+                         '01_Kit_Árvore_de_Natal/01_01.jpg',
+                         '01_Kit_Árvore_de_Natal/01_02.jpg',
+                         '01_Kit_Árvore_de_Natal/01_03.jpg',
+                         '01_Kit_Árvore_de_Natal/01_04.jpg'
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Árvore de Natal\', [\'01_Kit_Árvore_de_Natal/01_01.jpg\',\'01_Kit_Árvore_de_Natal/01_02.jpg\',\'01_Kit_Árvore_de_Natal/01_03.jpg\',\'01_Kit_Árvore_de_Natal/01_04.jpg\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+3</div>
                 
               </div>
               <div class="item-details">
@@ -316,12 +551,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/02_Kit_Bola_de_Natal/02_01.jpg" 
                        class="item-image" 
                        alt="Bola Globo de Natal"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Bola Globo de Natal', [
+                         '02_Kit_Bola_de_Natal/02_01.jpg',
+                         '02_Kit_Bola_de_Natal/02_02.mp4',
+                         '',
+                         ''
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Bola Globo de Natal\', [\'02_Kit_Bola_de_Natal/02_01.jpg\',\'02_Kit_Bola_de_Natal/02_02.mp4\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+1</div>
                 
               </div>
               <div class="item-details">
@@ -338,12 +580,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/03_Kit_Cartão_Postal/03_01.jpg" 
                        class="item-image" 
                        alt="Cartão de Natal"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Cartão de Natal', [
+                         '03_Kit_Cartão_Postal/03_01.jpg',
+                         '03_Kit_Cartão_Postal/03_02.jpg',
+                         '03_Kit_Cartão_Postal/03_03.mp4',
+                         ''
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Cartão de Natal\', [\'03_Kit_Cartão_Postal/03_01.jpg\',\'03_Kit_Cartão_Postal/03_02.jpg\',\'03_Kit_Cartão_Postal/03_03.mp4\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+2</div>
                 
               </div>
               <div class="item-details">
@@ -360,12 +609,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/04_Kit_Embrulho_de_Natal/04_01.jpg" 
                        class="item-image" 
                        alt="Embrulho de Natal"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Embrulho de Natal', [
+                         '04_Kit_Embrulho_de_Natal/04_01.jpg',
+                         '04_Kit_Embrulho_de_Natal/04_02.mp4',
+                         '',
+                         ''
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Embrulho de Natal\', [\'04_Kit_Embrulho_de_Natal/04_01.jpg\',\'04_Kit_Embrulho_de_Natal/04_02.mp4\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+1</div>
                 
               </div>
               <div class="item-details">
@@ -382,12 +638,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/05_Kit_Feliz_Natal_e_Ano_Novo/05_01.jpg" 
                        class="item-image" 
                        alt="Feliz Natal e Ano Novo"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Feliz Natal e Ano Novo', [
+                         '05_Kit_Feliz_Natal_e_Ano_Novo/05_01.jpg',
+                         '05_Kit_Feliz_Natal_e_Ano_Novo/05_02.jpg',
+                         '05_Kit_Feliz_Natal_e_Ano_Novo/05_03.mp4',
+                         ''
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Feliz Natal e Ano Novo\', [\'05_Kit_Feliz_Natal_e_Ano_Novo/05_01.jpg\',\'05_Kit_Feliz_Natal_e_Ano_Novo/05_02.jpg\',\'05_Kit_Feliz_Natal_e_Ano_Novo/05_03.mp4\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+2</div>
                 
               </div>
               <div class="item-details">
@@ -404,12 +667,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/06_Kit_Jesus_Nasceu/06_01.jpg" 
                        class="item-image" 
                        alt="Jesus Nasceu"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Jesus Nasceu', [
+                         '06_Kit_Jesus_Nasceu/06_01.jpg',
+                         '06_Kit_Jesus_Nasceu/06_01.jpg',
+                         '06_Kit_Jesus_Nasceu/06_02.jpg',
+                         '06_Kit_Jesus_Nasceu/06_03.jpg'
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Jesus Nasceu\', [\'06_Kit_Jesus_Nasceu/06_01.jpg\',\'06_Kit_Jesus_Nasceu/06_01.jpg\',\'06_Kit_Jesus_Nasceu/06_02.jpg\',\'06_Kit_Jesus_Nasceu/06_03.jpg\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+3</div>
                 
               </div>
               <div class="item-details">
@@ -426,12 +696,19 @@
             </div>
           
             <div class="item">
-              <div>
+              <div class="item-image-container">
                 
                   <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/07_Kit_Marcador_de_Livro/07_01.jpg" 
                        class="item-image" 
                        alt="Marcador de Livro"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\'>📷<br>Sem<br>Imagem</div>';">
+                       onclick="openGallery(this, 'Marcador de Livro', [
+                         '07_Kit_Marcador_de_Livro/07_01.jpg',
+                         '07_Kit_Marcador_de_Livro/07_02.mp4',
+                         '',
+                         ''
+                       ])"
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Marcador de Livro\', [\'07_Kit_Marcador_de_Livro/07_01.jpg\',\'07_Kit_Marcador_de_Livro/07_02.mp4\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+1</div>
                 
               </div>
               <div class="item-details">
@@ -458,5 +735,139 @@
       </p>
     </footer>
   </div>
+
+  <script>
+    // Sistema de galeria para múltiplas fotos
+    let currentGalleryIndex = 0;
+    let currentGalleryImages = [];
+    let currentGalleryName = '';
+    
+    function openGallery(element, itemName, imageUrls) {
+      // Filtra apenas URLs válidas
+      currentGalleryImages = imageUrls.filter(url => url && url.trim() !== '');
+      currentGalleryName = itemName;
+      currentGalleryIndex = 0;
+      
+      if (currentGalleryImages.length === 0) {
+        alert('Nenhuma imagem disponível para este item.');
+        return;
+      }
+      
+      const modal = document.getElementById('galleryModal');
+      const modalImg = document.getElementById('expandedImg');
+      const captionText = document.getElementById('imageCaption');
+      const thumbnailsContainer = document.getElementById('galleryThumbnails');
+      
+      // Limpa miniaturas anteriores
+      thumbnailsContainer.innerHTML = '';
+      
+      // Carrega a primeira imagem
+      loadGalleryImage(0, modalImg, captionText);
+      
+      // Cria miniaturas
+      currentGalleryImages.forEach((url, index) => {
+        const thumbnail = document.createElement('img');
+        thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+        thumbnail.src = url.startsWith('http') ? url : 'https://bolachariaelainemara.github.io/natal/Natalfotos/' + url;
+        thumbnail.alt = `${itemName} - Foto ${index + 1}`;
+        thumbnail.onclick = () => {
+          currentGalleryIndex = index;
+          loadGalleryImage(index, modalImg, captionText);
+          updateThumbnails();
+        };
+        thumbnail.onerror = () => {
+          thumbnail.style.display = 'none';
+        };
+        thumbnailsContainer.appendChild(thumbnail);
+      });
+      
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function loadGalleryImage(index, modalImg, captionText) {
+      const url = currentGalleryImages[index];
+      const fullUrl = url.startsWith('http') ? url : 'https://bolachariaelainemara.github.io/natal/Natalfotos/' + url;
+      
+      // Cria uma nova imagem para pré-carregar
+      const img = new Image();
+      img.onload = function() {
+        modalImg.src = fullUrl;
+        modalImg.alt = `${currentGalleryName} - Foto ${index + 1}`;
+        captionText.innerHTML = `${currentGalleryName} - Foto ${index + 1} de ${currentGalleryImages.length}`;
+      };
+      img.onerror = function() {
+        modalImg.alt = 'Imagem não disponível';
+        captionText.innerHTML = `${currentGalleryName} - Foto ${index + 1} (Não disponível)`;
+      };
+      img.src = fullUrl;
+      
+      updateThumbnails();
+    }
+    
+    function updateThumbnails() {
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      thumbnails.forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === currentGalleryIndex);
+      });
+    }
+    
+    function navigateGallery(direction) {
+      if (currentGalleryImages.length === 0) return;
+      
+      currentGalleryIndex += direction;
+      
+      if (currentGalleryIndex >= currentGalleryImages.length) {
+        currentGalleryIndex = 0;
+      } else if (currentGalleryIndex < 0) {
+        currentGalleryIndex = currentGalleryImages.length - 1;
+      }
+      
+      const modalImg = document.getElementById('expandedImg');
+      const captionText = document.getElementById('imageCaption');
+      loadGalleryImage(currentGalleryIndex, modalImg, captionText);
+    }
+    
+    function closeGallery() {
+      const modal = document.getElementById('galleryModal');
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('galleryModal');
+      const closeBtn = document.querySelector('.close');
+      const prevBtn = document.querySelector('.modal-prev');
+      const nextBtn = document.querySelector('.modal-next');
+      
+      // Fecha modal ao clicar no X
+      closeBtn.onclick = closeGallery;
+      
+      // Navegação entre imagens
+      prevBtn.onclick = () => navigateGallery(-1);
+      nextBtn.onclick = () => navigateGallery(1);
+      
+      // Fecha modal ao clicar fora da imagem
+      modal.onclick = function(event) {
+        if (event.target === modal) {
+          closeGallery();
+        }
+      }
+      
+      // Navegação com teclado
+      document.addEventListener('keydown', function(event) {
+        if (modal.style.display === 'block') {
+          if (event.key === 'Escape') {
+            closeGallery();
+          } else if (event.key === 'ArrowLeft') {
+            navigateGallery(-1);
+          } else if (event.key === 'ArrowRight') {
+            navigateGallery(1);
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>
