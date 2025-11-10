@@ -1293,7 +1293,7 @@ Saquinho de miini bolachinhas</div>
         // YouTube
         const videoId = extractYouTubeId(videoUrl);
         videoHTML = `
-          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&muted=1" 
+          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
                   allow="autoplay; encrypted-media" 
                   allowfullscreen
                   title="${itemName}">
@@ -1303,7 +1303,7 @@ Saquinho de miini bolachinhas</div>
         // Vimeo
         const videoId = videoUrl.split('/').pop();
         videoHTML = `
-          <iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1" 
+          <iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1" 
                   allow="autoplay; encrypted-media" 
                   allowfullscreen
                   title="${itemName}">
@@ -1336,10 +1336,9 @@ Saquinho de miini bolachinhas</div>
     }
     
     function extractYouTubeId(url) {
-      const regExp = /^.*((youtu.be/)|(v/)|(/u/w/)|(embed/)|(watch?))??v?=?([^#&?]*).*/;
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
       const match = url.match(regExp);
       return (match && match[7].length === 11) ? match[7] : null;
-
     }
     
     function closeVideo() {
