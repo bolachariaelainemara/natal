@@ -1293,7 +1293,7 @@ Saquinho de miini bolachinhas</div>
         // YouTube
         const videoId = extractYouTubeId(videoUrl);
         videoHTML = `
-          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1" 
                   allow="autoplay; encrypted-media" 
                   allowfullscreen
                   title="${itemName}">
@@ -1303,7 +1303,7 @@ Saquinho de miini bolachinhas</div>
         // Vimeo
         const videoId = videoUrl.split('/').pop();
         videoHTML = `
-          <iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1" 
+          <iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1&mute=1" 
                   allow="autoplay; encrypted-media" 
                   allowfullscreen
                   title="${itemName}">
@@ -1312,7 +1312,7 @@ Saquinho de miini bolachinhas</div>
       } else if (videoUrl.match(/\.(mp4|webm|ogg)$/i)) {
         // Vídeo local (MP4, WebM, OGG)
         videoHTML = `
-          <video controls autoplay style="width: 100%; height: 100%;">
+            <video controls autoplay muted style="width: 100%; height: 100%;">
             <source src="${videoUrl.startsWith('http') ? videoUrl : 'https://bolachariaelainemara.github.io/natal/Natalfotos/' + videoUrl}" type="video/mp4">
             Seu navegador não suporta o elemento de vídeo.
           </video>
