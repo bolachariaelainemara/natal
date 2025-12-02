@@ -169,6 +169,9 @@
       font-weight: bold;
       font-size: 16px;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      color: white;
+      z-index: 2;
+      position: relative;
     }
     
     .category {
@@ -367,6 +370,88 @@
       color: #888;
       margin-top: 8px;
       line-height: 1.4;
+    }
+    
+    /* Estilos para vídeos */
+    .item-video-container {
+      margin-top: 15px;
+      position: relative;
+    }
+    
+    .video-indicator {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(135deg, #FF0000, #CC0000);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      box-shadow: 0 3px 10px rgba(255,0,0,0.3);
+    }
+    
+    .video-indicator:hover {
+      background: linear-gradient(135deg, #CC0000, #990000);
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(255,0,0,0.4);
+    }
+    
+    .video-modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .video-modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 800px;
+      background: black;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .video-modal iframe, 
+    .video-modal video {
+      width: 100%;
+      height: 450px;
+      border: none;
+    }
+    
+    .video-close {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      color: white;
+      font-size: 35px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 3001;
+      background: rgba(0,0,0,0.7);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .video-close:hover {
+      background: rgba(255,0,0,0.8);
+      transform: scale(1.1);
     }
     
     /* Modal para galeria de fotos */
@@ -627,6 +712,23 @@
         width: 50px;
         height: 50px;
       }
+      
+      .video-modal-content {
+        width: 95%;
+      }
+      
+      .video-modal iframe,
+      .video-modal video {
+        height: 250px;
+      }
+      
+      .video-close {
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+        width: 40px;
+        height: 40px;
+      }
     }
   </style>
 </head>
@@ -646,6 +748,14 @@
     <div class="gallery-thumbnails" id="galleryThumbnails"></div>
   </div>
   
+  <!-- Modal para Vídeos -->
+  <div id="videoModal" class="video-modal">
+    <span class="video-close">&times;</span>
+    <div class="video-modal-content">
+      <div id="videoPlayerContainer"></div>
+    </div>
+  </div>
+  
   <div class="container">
     <header>
       <div class="header-bg">
@@ -659,14 +769,30 @@
           <div class="qr-code">
             <img src="https://bolachariaelainemara.github.io/natal/Natalfotos/web_qrcode_2.png" alt="QR Code para pedidos" onerror="this.style.display='none'">
           </div>
-          <div class="horario-text">
-            🎁 Encomendas até 20/12(sábado) Whats (67)99984-8476 *Consulte a taxa de entrega para o seu bairro.
-             <a href="https://wa.me/5567999848476" target="_blank" 
-       style="display: inline-block; margin-top: 8px; padding: 8px 16px; background: #25D366; color: white; text-decoration: none; border-radius: 20px; font-weight: bold;">
-      📱 Fazer Pedido
+         <div class="horario-text">
+  <strong>🎁 Encomendas até 20/12 (sábado)</strong><br>
+  
+  <div style="margin: 10px 0;">
+    <a href="https://wa.me/5567999848476" target="_blank" 
+       style="display: inline-flex; align-items: center; margin: 5px; padding: 10px 20px; background: #25D366; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; font-size: 14px;">
+      📱 WhatsApp: (67) 99984-8476
     </a>
-            
-          </div>
+  </div>
+  
+  <div style="display: flex; gap: 10px; justify-content: center; margin: 10px 0;">
+    <a href="https://wa.me/5567999848476" target="_blank" 
+       style="display: inline-flex; align-items: center; padding: 8px 16px; background: #25D366; color: white; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 13px;">
+      💬 Fazer Pedido
+    </a>
+    
+    <a href="https://www.instagram.com/elainemarabolacharia?utm_source=qr&igsh=a2gwaXh1Z3IxajFi" target="_blank" 
+       style="display: inline-flex; align-items: center; padding: 8px 16px; background: #E4405F; color: white; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 13px;">
+      📷 Instagram
+    </a>
+  </div>
+  
+  <small style="display: block; margin-top: 8px;">*Consulte a taxa de entrega para o seu bairro</small>
+</div>
         </div>
       </div>
     </header>
@@ -685,10 +811,9 @@
                        onclick="openGallery(this, 'Então é Natal ', [
                          '00_Então_é_Natal/00_01.jpg',
                          '00_Então_é_Natal/00_02.jpg',
-                         '00_Então_é_Natal/00_03.jpg',
-                         ''
+                         '00_Então_é_Natal/00_03.jpg'
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Então é Natal \', [\'00_Então_é_Natal/00_01.jpg\',\'00_Então_é_Natal/00_02.jpg\',\'00_Então_é_Natal/00_03.jpg\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Então é Natal \', [\'00_Então_é_Natal/00_01.jpg\',\'00_Então_é_Natal/00_02.jpg\',\'00_Então_é_Natal/00_03.jpg\'])\'>📷<br>Sem<br>Imagem</div>'">
                   <div class="gallery-indicator">+2</div>
                 
               </div>
@@ -704,6 +829,9 @@
                 <div class="item-descricao">4 bolachas grandes
 4 bolachas médias
 Pacotinho com mini bolachas</div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
               </div>
             </div>
           
@@ -716,10 +844,9 @@ Pacotinho com mini bolachas</div>
                        onclick="openGallery(this, 'Árvore de Natal', [
                          '01_Kit_Árvore_de_Natal/01_01.jpg',
                          '01_Kit_Árvore_de_Natal/01_02.jpg',
-                         '01_Kit_Árvore_de_Natal/01_03.jpg',
-                         ''
+                         '01_Kit_Árvore_de_Natal/01_03.jpg'
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Árvore de Natal\', [\'01_Kit_Árvore_de_Natal/01_01.jpg\',\'01_Kit_Árvore_de_Natal/01_02.jpg\',\'01_Kit_Árvore_de_Natal/01_03.jpg\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Árvore de Natal\', [\'01_Kit_Árvore_de_Natal/01_01.jpg\',\'01_Kit_Árvore_de_Natal/01_02.jpg\',\'01_Kit_Árvore_de_Natal/01_03.jpg\'])\'>📷<br>Sem<br>Imagem</div>'">
                   <div class="gallery-indicator">+2</div>
                 
               </div>
@@ -734,6 +861,15 @@ Pacotinho com mini bolachas</div>
                 </div>
                 <div class="item-descricao">4 bolachas grandes embaladas com fit
 </div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('01_Kit_Árvore_de_Natal/01_04.mp4', 'Árvore de Natal')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -745,12 +881,11 @@ Pacotinho com mini bolachas</div>
                        alt="Bola Globo de Natal"
                        onclick="openGallery(this, 'Bola Globo de Natal', [
                          '02_Kit_Bola_de_Natal/02_01.jpg',
-                         '02_Kit_Bola_de_Natal/02_02.mp4',
                          '',
                          ''
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Bola Globo de Natal\', [\'02_Kit_Bola_de_Natal/02_01.jpg\',\'02_Kit_Bola_de_Natal/02_02.mp4\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
-                  <div class="gallery-indicator">+1</div>
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Bola Globo de Natal\', [\'02_Kit_Bola_de_Natal/02_01.jpg\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  
                 
               </div>
               <div class="item-details">
@@ -763,6 +898,15 @@ Pacotinho com mini bolachas</div>
                   <div class="item-price">R$ 9,50</div>
                 </div>
                 <div class="item-descricao">Mini bolachinhas</div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('02_Kit_Bola_de_Natal/02_02.mp4', 'Bola Globo de Natal')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -775,11 +919,10 @@ Pacotinho com mini bolachas</div>
                        onclick="openGallery(this, 'Cartão de Natal', [
                          '03_Kit_Cartão_Postal/03_01.jpg',
                          '03_Kit_Cartão_Postal/03_02.jpg',
-                         '03_Kit_Cartão_Postal/03_03.mp4',
                          ''
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Cartão de Natal\', [\'03_Kit_Cartão_Postal/03_01.jpg\',\'03_Kit_Cartão_Postal/03_02.jpg\',\'03_Kit_Cartão_Postal/03_03.mp4\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
-                  <div class="gallery-indicator">+2</div>
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Cartão de Natal\', [\'03_Kit_Cartão_Postal/03_01.jpg\',\'03_Kit_Cartão_Postal/03_02.jpg\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+1</div>
                 
               </div>
               <div class="item-details">
@@ -793,6 +936,15 @@ Pacotinho com mini bolachas</div>
                 </div>
                 <div class="item-descricao">2 bolachas boneco ginger
 Saquinho de miini bolachinhas</div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('03_Kit_Cartão_Postal/03_03.mp4', 'Cartão de Natal')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -804,12 +956,11 @@ Saquinho de miini bolachinhas</div>
                        alt="Embrulho de Natal"
                        onclick="openGallery(this, 'Embrulho de Natal', [
                          '04_Kit_Embrulho_de_Natal/04_01.jpg',
-                         '04_Kit_Embrulho_de_Natal/04_02.mp4',
                          '',
                          ''
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Embrulho de Natal\', [\'04_Kit_Embrulho_de_Natal/04_01.jpg\',\'04_Kit_Embrulho_de_Natal/04_02.mp4\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
-                  <div class="gallery-indicator">+1</div>
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Embrulho de Natal\', [\'04_Kit_Embrulho_de_Natal/04_01.jpg\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  
                 
               </div>
               <div class="item-details">
@@ -822,6 +973,15 @@ Saquinho de miini bolachinhas</div>
                   <div class="item-price">R$ 25,00</div>
                 </div>
                 <div class="item-descricao">200 grs de bolachas sortidas</div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('04_Kit_Embrulho_de_Natal/04_02.mp4', 'Embrulho de Natal')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -834,11 +994,10 @@ Saquinho de miini bolachinhas</div>
                        onclick="openGallery(this, 'Feliz Natal e Ano Novo', [
                          '05_Kit_Feliz_Natal_e_Ano_Novo/05_01.jpg',
                          '05_Kit_Feliz_Natal_e_Ano_Novo/05_02.jpg',
-                         '05_Kit_Feliz_Natal_e_Ano_Novo/05_03.mp4',
                          ''
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Feliz Natal e Ano Novo\', [\'05_Kit_Feliz_Natal_e_Ano_Novo/05_01.jpg\',\'05_Kit_Feliz_Natal_e_Ano_Novo/05_02.jpg\',\'05_Kit_Feliz_Natal_e_Ano_Novo/05_03.mp4\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
-                  <div class="gallery-indicator">+2</div>
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Feliz Natal e Ano Novo\', [\'05_Kit_Feliz_Natal_e_Ano_Novo/05_01.jpg\',\'05_Kit_Feliz_Natal_e_Ano_Novo/05_02.jpg\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+1</div>
                 
               </div>
               <div class="item-details">
@@ -852,6 +1011,15 @@ Saquinho de miini bolachinhas</div>
                 </div>
                 <div class="item-descricao">4 bolachas grandes
 1 pacotinho misto mini bolachas</div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('05_Kit_Feliz_Natal_e_Ano_Novo/05_03.mp4', 'Feliz Natal e Ano Novo')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -864,10 +1032,9 @@ Saquinho de miini bolachinhas</div>
                        onclick="openGallery(this, 'Jesus Nasceu', [
                          '06_Kit_Jesus_Nasceu/06_01.jpg',
                          '06_Kit_Jesus_Nasceu/06_02.jpg',
-                         '06_Kit_Jesus_Nasceu/06_03.jpg',
-                         ''
+                         '06_Kit_Jesus_Nasceu/06_03.jpg'
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Jesus Nasceu\', [\'06_Kit_Jesus_Nasceu/06_01.jpg\',\'06_Kit_Jesus_Nasceu/06_02.jpg\',\'06_Kit_Jesus_Nasceu/06_03.jpg\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Jesus Nasceu\', [\'06_Kit_Jesus_Nasceu/06_01.jpg\',\'06_Kit_Jesus_Nasceu/06_02.jpg\',\'06_Kit_Jesus_Nasceu/06_03.jpg\'])\'>📷<br>Sem<br>Imagem</div>'">
                   <div class="gallery-indicator">+2</div>
                 
               </div>
@@ -882,6 +1049,15 @@ Saquinho de miini bolachinhas</div>
                 </div>
                 <div class="item-descricao">1 bolacha grande presépio
 4 bolachas frases </div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('06_Kit_Jesus_Nasceu/06_04.mp4', 'Jesus Nasceu')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -893,12 +1069,11 @@ Saquinho de miini bolachinhas</div>
                        alt="Marcador de Livro"
                        onclick="openGallery(this, 'Marcador de Livro', [
                          '07_Kit_Marcador_de_Livro/07_01.jpg',
-                         '07_Kit_Marcador_de_Livro/07_02.mp4',
                          '',
                          ''
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Marcador de Livro\', [\'07_Kit_Marcador_de_Livro/07_01.jpg\',\'07_Kit_Marcador_de_Livro/07_02.mp4\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
-                  <div class="gallery-indicator">+1</div>
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Marcador de Livro\', [\'07_Kit_Marcador_de_Livro/07_01.jpg\',\'\',\'\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  
                 
               </div>
               <div class="item-details">
@@ -912,6 +1087,15 @@ Saquinho de miini bolachinhas</div>
                 </div>
                 <div class="item-descricao">3 bolachas de  natal
 </div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('07_Kit_Marcador_de_Livro/07_02.mp4', 'Marcador de Livro')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -924,11 +1108,10 @@ Saquinho de miini bolachinhas</div>
                        onclick="openGallery(this, 'Palito de Natal de chocolate', [
                          '08_Palitos_de_Chocolate/08_01.jpg',
                          '08_Palitos_de_Chocolate/08_02.jpg',
-                         '08_Palitos_de_Chocolate/08_02.jpg',
-                         '08_Palitos_de_Chocolate/08_03.mp4'
+                         '08_Palitos_de_Chocolate/08_02.jpg'
                        ])"
-                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Palito de Natal de chocolate\', [\'08_Palitos_de_Chocolate/08_01.jpg\',\'08_Palitos_de_Chocolate/08_02.jpg\',\'08_Palitos_de_Chocolate/08_02.jpg\',\'08_Palitos_de_Chocolate/08_03.mp4\'])\'>📷<br>Sem<br>Imagem</div>'">
-                  <div class="gallery-indicator">+3</div>
+                       onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'no-image\' onclick=\'openGallery(this, \'Palito de Natal de chocolate\', [\'08_Palitos_de_Chocolate/08_01.jpg\',\'08_Palitos_de_Chocolate/08_02.jpg\',\'08_Palitos_de_Chocolate/08_02.jpg\'])\'>📷<br>Sem<br>Imagem</div>'">
+                  <div class="gallery-indicator">+2</div>
                 
               </div>
               <div class="item-details">
@@ -941,6 +1124,15 @@ Saquinho de miini bolachinhas</div>
                   <div class="item-price">R$ 25,00</div>
                 </div>
                 <div class="item-descricao">6 bolachas em forma de palito banhadas no chocolate nobre</div>
+                
+                <!-- SEÇÃO DO VÍDEO -->
+                
+                  <div class="item-video-container">
+                    <button class="video-indicator" onclick="openVideo('08_Palitos_de_Chocolate/08_03.mp4', 'Palito de Natal de chocolate')">
+                      🎬 ASSISTIR VÍDEO
+                    </button>
+                  </div>
+                
               </div>
             </div>
           
@@ -958,7 +1150,7 @@ Saquinho de miini bolachinhas</div>
         </div>
         <p style="margin: 0; font-weight: bold;">🎅 Feliz Natal e Próspero Ano Novo! 🎄</p>
         <p style="margin: 10px 0 0 0; font-size: 12px; opacity: 0.8;">
-          Atualizado em 10/11/2025 • Que suas festas sejam iluminadas! ✨
+          Atualizado em 24/11/2025 • Que suas festas sejam iluminadas! ✨
         </p>
       </div>
     </footer>
@@ -989,13 +1181,13 @@ Saquinho de miini bolachinhas</div>
       }
     }
     
-    // Sistema de galeria para múltiplas fotos
+    // Sistema de galeria para 3 fotos
     let currentGalleryIndex = 0;
     let currentGalleryImages = [];
     let currentGalleryName = '';
     
     function openGallery(element, itemName, imageUrls) {
-      // Filtra apenas URLs válidas
+      // Filtra apenas URLs válidas (3 imagens)
       currentGalleryImages = imageUrls.filter(url => url && url.trim() !== '');
       currentGalleryName = itemName;
       currentGalleryIndex = 0;
@@ -1086,6 +1278,90 @@ Saquinho de miini bolachinhas</div>
       document.body.style.overflow = 'auto';
     }
     
+    // Sistema de vídeos
+    function openVideo(videoUrl, itemName) {
+      const modal = document.getElementById('videoModal');
+      const container = document.getElementById('videoPlayerContainer');
+      
+      // Limpa conteúdo anterior
+      container.innerHTML = '';
+      
+      let videoHTML = '';
+      
+      // Detecta o tipo de vídeo
+      if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+        // YouTube
+        const videoId = extractYouTubeId(videoUrl);
+        videoHTML = `
+          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1" " 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen
+                  title="${itemName}">
+          </iframe>
+        `;
+      } else if (videoUrl.includes('vimeo.com')) {
+        // Vimeo
+        const videoId = videoUrl.split('/').pop();
+        videoHTML = `
+          <iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1" " 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen
+                  title="${itemName}">
+          </iframe>
+        `;
+      } else if (videoUrl.match(/\.(mp4|webm|ogg)$/i)) {
+        // Vídeo local (MP4, WebM, OGG)
+        videoHTML = `
+            <video autoplay  autoplay muted style="width: 100%; height: 100%;">
+            <source src="${videoUrl.startsWith('http') ? videoUrl : 'https://bolachariaelainemara.github.io/natal/Natalfotos/' + videoUrl}" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+          </video>
+        `;
+      } else {
+        // Link genérico
+        videoHTML = `
+          <div style="padding: 50px; text-align: center; color: white;">
+            <h3>${itemName}</h3>
+            <p>Vídeo disponível em:</p>
+            <a href="${videoUrl}" target="_blank" style="color: #ffd700; font-size: 18px;">
+              🔗 Abrir Vídeo
+            </a>
+          </div>
+        `;
+      }
+      
+      container.innerHTML = videoHTML;
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function extractYouTubeId(url) {
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[7].length === 11) ? match[7] : null;
+    }
+    
+    function closeVideo() {
+      const modal = document.getElementById('videoModal');
+      const container = document.getElementById('videoPlayerContainer');
+      
+      // Para todos os vídeos
+      const iframes = container.getElementsByTagName('iframe');
+      const videos = container.getElementsByTagName('video');
+      
+      for (let iframe of iframes) {
+        iframe.src = '';
+      }
+      
+      for (let video of videos) {
+        video.pause();
+        video.currentTime = 0;
+      }
+      
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
     // Event Listeners
     document.addEventListener('DOMContentLoaded', function() {
       createSnow();
@@ -1095,8 +1371,12 @@ Saquinho de miini bolachinhas</div>
       const prevBtn = document.querySelector('.modal-prev');
       const nextBtn = document.querySelector('.modal-next');
       
+      const videoModal = document.getElementById('videoModal');
+      const videoClose = document.querySelector('.video-close');
+      
       // Fecha modal ao clicar no X
       closeBtn.onclick = closeGallery;
+      videoClose.onclick = closeVideo;
       
       // Navegação entre imagens
       prevBtn.onclick = () => navigateGallery(-1);
@@ -1109,6 +1389,12 @@ Saquinho de miini bolachinhas</div>
         }
       }
       
+      videoModal.onclick = function(event) {
+        if (event.target === videoModal) {
+          closeVideo();
+        }
+      }
+      
       // Navegação com teclado
       document.addEventListener('keydown', function(event) {
         if (modal.style.display === 'block') {
@@ -1118,6 +1404,10 @@ Saquinho de miini bolachinhas</div>
             navigateGallery(-1);
           } else if (event.key === 'ArrowRight') {
             navigateGallery(1);
+          }
+        } else if (videoModal.style.display === 'block') {
+          if (event.key === 'Escape') {
+            closeVideo();
           }
         }
       });
